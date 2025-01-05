@@ -59,7 +59,7 @@ public class AuthController {
         otpService.saveOtpDetails(otpDTO1);
         String emailBody = "Dear User,\n\nYour OTP for verification is: " + verificationCode +
                 "\n\nPlease use this OTP to complete your registration. The OTP is valid for 6 minutes.\n\nThank you,\nStockSense team";
-        sendEmailService.sendOtpEmail(otpDTO.getUserEmail(),
+        sendEmailService.sendEmail(otpDTO.getUserEmail(),
                 "Account Verification code for StockSense", emailBody);
         return new ResponseEntity<>("Email sent successfully", HttpStatus.OK);
     }

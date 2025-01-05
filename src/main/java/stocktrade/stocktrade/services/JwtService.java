@@ -2,26 +2,20 @@ package stocktrade.stocktrade.services;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecureDigestAlgorithm;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import stocktrade.stocktrade.entities.OtpEntity;
 import stocktrade.stocktrade.entities.UserDetailsEntity;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class JwtService {
     @Value("${token_key}")
     private String tokenKey;
-    private final SignUpService signUpService;
     private SecretKey generateKey(){
         return Keys.hmacShaKeyFor(tokenKey.getBytes(StandardCharsets.UTF_8));
     }
@@ -62,8 +56,7 @@ public class JwtService {
         throw new JwtException(errMsg);
     }
 
-    public String GenerateAccessTokenFromRefreshToken(Long userId){
-        UserDetailsEntity user = signUpService.getUserById(userId);
+    public String GenerateAccessTokenFromRefreshToken(UserDetailsEntity user){
         if(user!=null) {
             return Jwts.builder()
                     .subject(user.getUserId().toString())

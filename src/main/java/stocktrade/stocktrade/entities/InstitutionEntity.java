@@ -1,14 +1,15 @@
 package stocktrade.stocktrade.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import stocktrade.stocktrade.enums.Permissions;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,4 +47,8 @@ public class InstitutionEntity extends AuditableEntity{
     private String linkedIn;
     private String twitter;
     private String facebook;
+    @OneToMany(mappedBy = "institutionEntity",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("institutionEntity")
+    private List<ResearchAnalystEntity> reseachAnalystEntityList;
+
 }

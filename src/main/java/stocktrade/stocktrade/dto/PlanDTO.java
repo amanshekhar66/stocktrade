@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,7 +20,10 @@ public class PlanDTO {
     @NotBlank
     private String planName;
     private Long planOwnerId;
-    private Double planAmount;
+    private String planOwnerEmail;
+    private Double planAmount_three;
+    private Double planAmount_six;
+    private Double planAmount_twelve;
     @NotNull
     private String paymentId;
     @JsonProperty("isExpired")
@@ -26,4 +31,9 @@ public class PlanDTO {
     private Boolean planDuration_three;
     private Boolean planDuration_six;
     private Boolean planDuration_twelve;
+    @JsonProperty("isCouponDetailsUpdated")
+    private Boolean isCouponDetailsUpdated;
+
+    private List<CouponDTO> coupons;
+    private List<PlanCustomerDTO> planCustomerDTOS;
 }

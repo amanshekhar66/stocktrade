@@ -2,10 +2,8 @@ package stocktrade.stocktrade.dto;
 
 import jakarta.validation.constraints.Email;
 import lombok.*;
-import stocktrade.stocktrade.enums.Roles;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter

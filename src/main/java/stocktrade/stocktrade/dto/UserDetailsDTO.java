@@ -2,10 +2,7 @@ package stocktrade.stocktrade.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import stocktrade.stocktrade.enums.Permissions;
 import stocktrade.stocktrade.enums.Roles;
 
@@ -16,6 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserDetailsDTO {
 
     private String firstName;

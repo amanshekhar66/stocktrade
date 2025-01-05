@@ -15,7 +15,7 @@ public class SendEmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendOtpEmail(String toEmail, String subject, String body) throws MessagingException {
+    public void sendEmail(String toEmail, String subject, String body) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 

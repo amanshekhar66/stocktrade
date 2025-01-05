@@ -12,11 +12,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import stocktrade.stocktrade.dto.TokenDTO;
 import stocktrade.stocktrade.dto.UserDetailsDTO;
+import stocktrade.stocktrade.entities.CustomerEntity;
+import stocktrade.stocktrade.entities.RecommendationEntity;
 import stocktrade.stocktrade.entities.UserDetailsEntity;
 import stocktrade.stocktrade.enums.Roles;
+import stocktrade.stocktrade.exceptions.ResourceNotFound;
 import stocktrade.stocktrade.exceptions.UnverifiedUserException;
+import stocktrade.stocktrade.repositories.CustomerRepository;
 import stocktrade.stocktrade.repositories.UserDetailsRepository;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -26,6 +32,7 @@ public class SignUpService implements UserDetailsService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final OtpService otpService;
+    private final CustomerService customerService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,7 +44,10 @@ public class SignUpService implements UserDetailsService {
     
     public UserDetailsEntity createNewUserThroughOAuth2(UserDetailsEntity userDetails){
         if(!userDetailsRepository.existsByUserEmail(userDetails.getUserEmail())) {
-            return userDetailsRepository.save(userDetails);
+            UserDetailsEntity user = userDetailsRepository.save(userDetails);
+            CustomerEntity customer = modelMapper.map(user, CustomerEntity.class);
+            customerService.createNewCustomer(customer);
+            return user;
         }
         return userDetailsRepository.findByUserEmail(userDetails.getUserEmail()).orElseThrow(
                 ()->new RuntimeException("User exists in the database but its value is not getting retrieved")
@@ -54,7 +64,9 @@ public class SignUpService implements UserDetailsService {
         otpService.deleteOtpByEmail(userDetailsDTO.getUserEmail());
         UserDetailsEntity user = modelMapper.map(userDetailsDTO,UserDetailsEntity.class);
         user.setUserPassword(passwordEncoder.encode(userDetailsDTO.getUserPassword()));
-        return modelMapper.map(userDetailsRepository.save(user),UserDetailsDTO.class);
+        UserDetailsEntity userDetails = userDetailsRepository.save(user);
+        customerService.createNewCustomer(modelMapper.map(user, CustomerEntity.class));
+        return modelMapper.map(userDetails,UserDetailsDTO.class);
     }
 
     public boolean ifVerifiedUserAlreadyRegistered(String email) {
@@ -73,6 +85,31 @@ public class SignUpService implements UserDetailsService {
             userDetails.setRoles(roles);
             userDetailsRepository.save(userDetails);
         }
+    }
+
+    public Long getUserId(String email) {
+        UserDetailsEntity userDetails = userDetailsRepository.findByUserEmail(email)
+                .orElseThrow(()-> new ResourceNotFound("System issue : User not found, kindly register again"));
+        return userDetails.getUserId();
+    }
+
+    public Set<Roles> getRoleOfUser(Long planOwnerId) {
+        UserDetailsEntity userDetails = userDetailsRepository.findById(planOwnerId).orElseThrow(
+                ()-> new ResourceNotFound("No user found, kindly register again!")
+        );
+        return userDetails.getRoles();
+    }
+    public List<Roles> getRoleOfUserInList(Long planOwnerId) {
+        UserDetailsEntity userDetails = userDetailsRepository.findById(planOwnerId).orElseThrow(
+                ()-> new ResourceNotFound("No user found, kindly register again!")
+        );
+        return userDetails.getRoles().stream().toList();
+    }
+
+    public String getUserEmail(Long ownerId) {
+       UserDetailsEntity user  = userDetailsRepository.findById(ownerId).orElseThrow(()->
+                new ResourceNotFound("User not registered, kindly get registered first"));
+        return user.getUserEmail();
     }
 }
 

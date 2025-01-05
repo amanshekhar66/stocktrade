@@ -79,7 +79,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(userId.equals(0L)){
             throw new JwtException("Refresh token has been expired, direct user to the login page");
         }
-        String accessToken = jwtService.GenerateAccessTokenFromRefreshToken(userId);
+        UserDetailsEntity userDetails = signUpService.getUserById(userId);
+        String accessToken = jwtService.GenerateAccessTokenFromRefreshToken(userDetails);
         Cookie cookie = new Cookie("accessToken",accessToken);
         if(appEnv.equals("production")){
             cookie.setHttpOnly(true);

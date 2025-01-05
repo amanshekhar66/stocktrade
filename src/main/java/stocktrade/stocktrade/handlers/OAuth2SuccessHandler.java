@@ -38,7 +38,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .userEmail(userEmail)
                 .firstName(oAuth2User.getAttribute("name"))
                 .roles(Set.of(Roles.CUSTOMER))
-                .permissions(Permissions.VIEW_PLATFORM)
+               // .permissions(Permissions.VIEW_PLATFORM)
                 .isVerified(true)
                 .build();
         UserDetailsEntity savedUser = signUpService.createNewUserThroughOAuth2(userDetails);

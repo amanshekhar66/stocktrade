@@ -1,5 +1,6 @@
 package stocktrade.stocktrade.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stocktrade.stocktrade.enums.Permissions;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +18,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResearchAnalystDTO {
-    private String name;
+    private String firstName;
+    private String surName;
+    private String gender;
+    private String password;
     private String email;
     private LocalDate DOB;
     private String city;
@@ -34,4 +39,7 @@ public class ResearchAnalystDTO {
     @NotNull
     @NotBlank
     private String regNo;
+    @JsonIgnoreProperties("researchAnalystDTOList")
+    private InstitutionDTO institutionDTO;
+    private Permissions permission;
 }

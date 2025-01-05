@@ -42,15 +42,15 @@ public class UserDetailsEntity extends AuditableEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Roles> roles = new HashSet<>();
 
-    @Enumerated(EnumType.STRING)
-    private Permissions permissions;
+//    @Enumerated(EnumType.STRING)
+//    private Permissions permissions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         roles.forEach(role ->
                 authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name())));
-        authorities.add(new SimpleGrantedAuthority(permissions.name()));
+//        authorities.add(new SimpleGrantedAuthority(permissions.name()));
         return authorities;
     }
 
